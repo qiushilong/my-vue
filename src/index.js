@@ -1,5 +1,12 @@
-export let a = 1;
+import { initMixin } from "./init";
 
-export default {
-  b:1
+/**
+ * @param {*} options 传入的选项
+ */
+function Vue(options) {
+  this._init(options);
 }
+
+initMixin(Vue);
+
+export default Vue;
