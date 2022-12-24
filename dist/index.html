@@ -1,0 +1,29 @@
+<script src="vue.js"></script>
+<script>
+  console.log(Vue);
+
+  const vm = new Vue({
+    data() {
+      return {
+        name: "zs",
+        age: 20,
+        address: {
+          code: 123,
+          msg: "北京",
+        },
+        hobby: [
+          "football",
+          {
+            name: "篮球",
+            year: "两年半",
+          },
+        ],
+      };
+    },
+  });
+  console.log(vm);
+  vm._data.hobby.push({
+    name: "pq球",
+    year: "艺年半",
+  });
+</script>

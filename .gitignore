@@ -1,3 +1,4 @@
 /node_modules
-/dist
+/dist/vue.js
+/dist/vue.js.map
 package-lock.json
