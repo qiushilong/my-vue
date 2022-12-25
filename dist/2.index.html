@@ -1,0 +1,39 @@
+<div id="app">
+  <div>{{name}}</div>
+  <div>{{age}}</div>
+</div>
+<script src="vue.js"></script>
+<script>
+  console.log(Vue);
+
+  const vm = new Vue({
+    data() {
+      return {
+        name: "zs",
+        age: 20,
+        address: {
+          code: 123,
+          msg: "北京",
+        },
+        hobby: [
+          "football",
+          {
+            name: "篮球",
+            year: "两年半",
+          },
+        ],
+      };
+    },
+    // 将数据解析到 el 上
+    el: "#app",
+    // template:``,
+    // render(){}
+  });
+
+  // 数据 -> 视图
+  // 1. 模板引擎（性能差，需要正则匹配替换，vue1.x）
+  // 2. 采用虚拟 DOM，数据变化后比较虚拟 DOM 的差异，最后更新需要更新的地方
+  //    核心就是我们需要将模板变成 js 语法，通过 js 语法生成 DOM
+
+  // 将 template 转换为 render
+</script>
