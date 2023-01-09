@@ -36,7 +36,6 @@ export function initMixin(Vue) {
         const render = compileToFunction(template);
         ops.render = render;
       } 
-      console.log("template", el, template);
     }
 
     // script 标签引用的 vue.global.js 这个编译过程是再浏览器运行的
