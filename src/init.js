@@ -1,5 +1,6 @@
 import { initState } from "./state";
 import { compileToFunction } from "./compiler/index";
+import { mountComponent } from './lifecycle'
 
 export function initMixin(Vue) {
   Vue.prototype._init = function (options) {
@@ -38,9 +39,11 @@ export function initMixin(Vue) {
       } 
     }
 
+    mountComponent(vm, el);
+
     // script 标签引用的 vue.global.js 这个编译过程是再浏览器运行的
     // runtime 是不包含模板编译的，整个编译是再打包的时候通过 loader 来转义 .vue 文件的，用 runtime 的时候不能使用 template
 
-    ops.render;
+    // ops.render;
   };
 }

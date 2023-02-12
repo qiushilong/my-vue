@@ -197,9 +197,17 @@ function codegen(ast) {
 export function compileToFunction(template) {
   // 1. 将 template 转化为 ast 语法树
   let ast = parseHTML(template);
-  console.dir(ast);
 
   // 2. 生成 render 方法（render 方法执行后返回的结果就是 虚拟DOM）
   // render(h) { return _c('div',{id: 'app'}, _c('div', {style: {color: 'red'}}, _v(_s(name)+'hello'),_c('span',undefined, _v(_s(age))))))}
-  console.log(codegen(ast));
+  // console.log(codegen(ast));
+
+  let code = codegen(ast);
+  // with + new Function()
+  code = `with(this){return ${code}}`;
+  let render = new Function(code); // 根据代码生成 render 过程
+
+  console.log(render.toString())
+
+  return render;
 }
