@@ -1,4 +1,5 @@
 import { newArrayProto } from "./array";
+import Dep from "./dep";
 
 class Observer {
   constructor(data) {
@@ -37,18 +38,21 @@ class Observer {
 
 function defineReactive(target, key, value) {
   observe(value);
+  let dep = new Dep();
   Object.defineProperty(target, key, {
-    get() {
-      // 取值的时候，执行 get
+    get() { // 取值的时候，执行 get
+      if(Dep.target) {
+        dep.depend();
+      }
       return value;
     },
-    set(newValue) {
-      // 赋值的时候，执行 set
+    set(newValue) { // 赋值的时候，执行 set
       if (newValue === value) {
         return;
       }
       observe(newValue);
       value = newValue;
+      dep.notify(); // 通知更新
     },
   });
 }
