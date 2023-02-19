@@ -36,7 +36,12 @@ class Watcher {
   }
 
   update() {
-    this.get(); // 重新渲染
+    // this.get(); // 重新渲染
+    queueWatcher(this); // 不立即渲染
+  }
+
+  run() {
+    this.get();
   }
 }
 
@@ -45,5 +50,75 @@ class Watcher {
 // n 个 dep 对应一个 watcher
 // 一个属性对应着多个视图，一个 dep 对应多个 watcher
 // dep 和 watcher 是多对多的关系
+
+let queue = [];
+let has = {};
+let pending = false; // 防抖
+
+function flushSchedulerQueue() {
+  let flushQueue = queue.slice(0)
+
+  queue = [];
+  has = {};
+  pending = false;
+
+  flushQueue.forEach(q => q.run())
+}
+
+function queueWatcher(watcher) {
+
+  const id = watcher.id;
+  if(!has[id]) {
+    queue.push(watcher)
+    has[id] = true;
+    // 不管 update 执行多少次，最终只执行一轮刷新操作
+    if(!pending) {
+      nextTick(flushSchedulerQueue, 0)
+      pending = true;
+    }
+  }
+}
+
+let callbacks = [];
+let waiting = false;
+
+function flushCallbacks() {
+  let cbs = callbacks.slice(0)
+  waiting = true;
+  callbacks = [];
+  cbs.forEach(cb => cb())
+}
+
+// 优雅降级，先考虑 promise(微任务)，后考虑 setTimeout（宏任务）
+let timerFunc;
+if(Promise) {
+  timerFunc = () => {
+    Promise.resolve().then(flushCallbacks)
+  }
+} else if(MutationObserver) {
+  let observer = new MutationObserver(flushCallbacks); // 
+  let textNode = document.createTextNode(1);
+  observer.observe(textNode, {
+    characterData: true
+  })
+  timerFunc = () => {
+    textNode.textContent = 2;
+  }
+} else if(setImmediate) {
+  timerFunc = () => {
+    setImmediate(flushCallbacks)
+  }
+} else {
+  timerFunc = () => {
+    setTimeout(flushCallbacks)
+  }
+}
+
+export function nextTick(cb) {
+  callbacks.push(cb);
+  if(!waiting) {
+    timerFunc();
+  }
+}
 
 export default Watcher;
