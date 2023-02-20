@@ -103,3 +103,11 @@ export function mountComponent(vm, el) {
   5. render 函数会去生成虚拟节点（使用响应式数据）
   6. 根据虚拟节点生成真实的 dom
 */
+
+export function callHook(vm, hook) {
+  const handlers = vm.$options[hook]
+
+  if(handlers) {
+    handlers.forEach(handlers => handlers.call(vm))
+  }
+}
